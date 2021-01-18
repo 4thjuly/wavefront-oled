@@ -11,7 +11,7 @@ TARGET = main
 CC = gcc
 
 DEBUG = -g -O0 -Wall
-CFLAGS += $(DEBUG)
+CFLAGS += $(DEBUG) -fpic
 
 USELIB = USE_BCM2835_LIB
 # USELIB = USE_WIRINGPI_LIB
@@ -25,15 +25,14 @@ else
     LIB = -lm 
 endif
 
-
-${TARGET}:${OBJ_O}
+${TARGET}: ${OBJ_O}
 	$(CC) $(CFLAGS) $(OBJ_O) -o $@ $(LIB)
 
-${DIR_BIN}/%.o : $(DIR_OBJ)/%.c
+${DIR_BIN}/%.o: $(DIR_OBJ)/%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ $(LIB)
 
-${DIR_BIN}/%.o:$(DIR_FONTS)/%.c
+${DIR_BIN}/%.o: $(DIR_FONTS)/%.c
 	$(CC) $(CFLAGS) -c  $< -o $@ 
 	
-clean :
+clean:
 	$(RM) $(DIR_BIN)/*.* $(TARGET) $(DIR_OBJ)/.*.sw?

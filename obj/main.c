@@ -12,20 +12,21 @@ int main(void)
 {
 	time_t now;
     struct tm *timenow;
-    int i;
+    int i = 0;
+
 	//1.System Initialization
 	if(DEV_ModuleInit())
 		exit(0);
 	
 	//2.show
 	printf("**********Init OLED**********\r\n");
-	OLED_SCAN_DIR OLED_ScanDir = SCAN_DIR_DFT;//SCAN_DIR_DFT = D2U_L2R
-	OLED_Init(OLED_ScanDir );	
+	OLED_SCAN_DIR OLED_ScanDir = SCAN_DIR_DFT; //SCAN_DIR_DFT = D2U_L2R
+	OLED_Init(OLED_ScanDir);	
 	
 	printf("OLED Show \r\n");
 	GUI_Show();
 	
-	while(1){
+	while (1) {
         i++;
 		time(&now);
 		timenow = localtime(&now);
@@ -37,9 +38,9 @@ int main(void)
 		GUI_Disbitmap(90, 2, Alarm88, 8, 8);
 		GUI_Disbitmap(112, 2, Bat816, 16, 8);
 		
-		GUI_DisString_EN(0, 52, "MUSIC", &Font12, FONT_BACKGROUND, WHITE); 
-		GUI_DisString_EN(52, 52, "MENU", &Font12, FONT_BACKGROUND, WHITE); 
-		GUI_DisString_EN(98, 52, "PHONE", &Font12, FONT_BACKGROUND, WHITE);
+		GUI_DisString_EN(0, 52, "FOO", &Font12, FONT_BACKGROUND, WHITE); 
+		GUI_DisString_EN(52, 52, "BAR", &Font12, FONT_BACKGROUND, WHITE); 
+		GUI_DisString_EN(98, 52, "FRED", &Font12, FONT_BACKGROUND, WHITE);
 
 		GUI_DisChar(0, 16, value[timenow->tm_hour / 10], &Font24, FONT_BACKGROUND, WHITE);
 		GUI_DisChar(16, 16, value[timenow->tm_hour % 10], &Font24, FONT_BACKGROUND, WHITE);
@@ -52,10 +53,11 @@ int main(void)
 		
 		OLED_Display();		
 		OLED_Clear(0x00);
-        if(i==10){
+        if (i == 5000) {
             break;
         }
 	}
+
     DEV_Delay_ms(1000);
     printf("KEY \r\n");
     KEY_Listen();
