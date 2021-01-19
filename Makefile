@@ -36,3 +36,17 @@ ${DIR_BIN}/%.o: $(DIR_FONTS)/%.c
 	
 clean:
 	$(RM) $(DIR_BIN)/*.* $(TARGET) $(DIR_OBJ)/.*.sw?
+
+shared:
+	$(CC) -shared -o $(DIR_BIN)/liboled.so \
+		$(DIR_BIN)/DEV_Config.o \
+		$(DIR_BIN)/dev_hardware_SPI.o \
+		$(DIR_BIN)/dev_hardware_i2c.o \
+		$(DIR_BIN)/OLED_Driver.o \
+		$(DIR_BIN)/OLED_GUI.o \
+		$(DIR_BIN)/font8.o \
+		$(DIR_BIN)/font12.o \
+		$(DIR_BIN)/font16.o \
+		$(DIR_BIN)/font20.o \
+		$(DIR_BIN)/font24.o \
+		-lbcm2835 -lm

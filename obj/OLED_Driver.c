@@ -11,7 +11,6 @@ Please use progressive scanning to generate images or fonts
 ***********************************************************************************************************************/
 #include "OLED_Driver.h"
 #include <stdio.h>
-// extern OLED_DIS sOLED_DIS;
 
 char Buffer[OLED_WIDTH * OLED_HEIGHT / 8];
 OLED_DIS sOLED_DIS;
@@ -120,12 +119,12 @@ void OLED_SetGramScanWay(OLED_SCAN_DIR Scan_dir)
 
     //Get GRAM and OLED width and height
     if(Scan_dir == L2R_U2D || Scan_dir == L2R_D2U || Scan_dir == R2L_U2D || Scan_dir == R2L_D2U) {
-        sOLED_DIS.OLED_Dis_Column	= OLED_WIDTH ;
+        sOLED_DIS.OLED_Dis_Column = OLED_WIDTH ;
         sOLED_DIS.OLED_Dis_Page = OLED_HEIGHT ;
         sOLED_DIS.OLED_X_Adjust = OLED_X;
         sOLED_DIS.OLED_Y_Adjust = OLED_Y;
     } else {
-        sOLED_DIS.OLED_Dis_Column	= OLED_HEIGHT ;
+        sOLED_DIS.OLED_Dis_Column = OLED_HEIGHT ;
         sOLED_DIS.OLED_Dis_Page = OLED_WIDTH ;
         sOLED_DIS.OLED_X_Adjust = OLED_Y;
         sOLED_DIS.OLED_Y_Adjust = OLED_X;

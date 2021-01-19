@@ -49,7 +49,7 @@ typedef struct{
 	POINT OLED_X_Adjust;		//OLED x actual display position calibration
 	POINT OLED_Y_Adjust;		//OLED y actual display position calibration
 }OLED_DIS;
-// OLED_DIS sOLED_DIS;
+extern OLED_DIS sOLED_DIS;
 
 /********************************************************************************
 function:	
