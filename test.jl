@@ -1,21 +1,66 @@
+using Sockets, Printf
+
 const OledLib = "liboled"
 
-@ccall OledLib.DEV_ModuleInit()::Cvoid
-@ccall OledLib.OLED_Init(0::Cint)::Cvoid	
+const FONT12 = cglobal((:Font12, OledLib), Cvoid)
+const FONT24 = cglobal((:Font24, OledLib), Cvoid)
 
-@ccall OledLib.OLED_Clear(0xFF::Cushort)::Cvoid
-@ccall OledLib.OLED_Display()::Cvoid
+clear(col = 0x0000) = @ccall OledLib.OLED_Clear(col::Cushort)::Cvoid
+display() = @ccall OledLib.OLED_Display()::Cvoid
+drawString24pt(x, y, msg) = @ccall OledLib.GUI_DisString_EN(x::Cushort, y::Cushort, msg::Cstring, FONT24::Ptr{Cvoid}, 0x00::Cushort, 0xFF::Cushort)::Cvoid
+drawString12pt(x, y, msg) = @ccall OledLib.GUI_DisString_EN(x::Cushort, y::Cushort, msg::Cstring, FONT12::Ptr{Cvoid}, 0x00::Cushort, 0xFF::Cushort)::Cvoid
 
-sleep(1)
+function init() 
+    @ccall OledLib.DEV_ModuleInit()::Cvoid
+    @ccall OledLib.OLED_Init(0::Cint)::Cvoid	
+end
 
-@ccall OledLib.OLED_Clear(0x00::Cushort)::Cvoid
-@ccall OledLib.OLED_Display()::Cvoid
 
-sleep(1)
+function displayIP()
+    ip = ip"0.0.0.0"
+    try
+        ip = getipaddr()
+    catch exc
+        # no ip
+    end
 
-@ccall OledLib.OLED_Clear(0x00::Cushort)::Cvoid
-FONT12 = cglobal((:Font12, OledLib), Cvoid)
-FONT24 = cglobal((:Font24, OledLib), Cvoid)
-@ccall OledLib.GUI_DisString_EN(0::Cushort, 0::Cushort, "Test1"::Cstring, FONT24::Ptr{Cvoid}, 0x00::Cushort, 0xFF::Cushort)::Cvoid
-@ccall OledLib.GUI_DisString_EN(0::Cushort, 20::Cushort, "Test2"::Cstring, FONT12::Ptr{Cvoid}, 0x00::Cushort, 0xFF::Cushort)::Cvoid
-@ccall OledLib.OLED_Display()::Cvoid
+    ipstr = string(ip)
+    drawString12pt(0, 0, ipstr)
+    display()
+end
+
+function displayRTT()
+    start = time_ns()
+    socket = connect(ip"192.168.139.1", 80)
+    finish = time_ns()
+    close(socket)
+    emsStr = @sprintf("%.2f ms", (finish-start) / 1_000_000)
+    drawString12pt(0, 10, emsStr)
+    display()
+end
+
+function main()
+    init()
+
+    clear(0xff)
+    display()
+    sleep(1)
+
+    clear()
+    display()
+    sleep(1)
+
+    clear()
+    drawString12pt(0, 0, "Starting")
+    display()
+
+    while true
+        clear()
+        displayIP()
+        displayRTT()
+        sleep(1)
+    end
+end
+
+main()
+
